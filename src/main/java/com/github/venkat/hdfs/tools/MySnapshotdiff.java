@@ -1,21 +1,17 @@
 package com.github.venkat.hdfs.tools;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hdfs.DistributedFileSystem;
+import org.apache.hadoop.hdfs.protocol.SnapshotDiffReport;
 import org.apache.hadoop.security.UserGroupInformation;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 
-public class MyListStatus {
+public class MySnapshotdiff {
+    public MySnapshotdiff() throws IOException {
 
-    public void listStatus() throws IOException {
         Configuration conf = new Configuration(false);
         conf.addResource(new Path("/Users/venkat/Code/namenode_loadtester/src/main/java/com/github/venkat/hdfs/tools/core-site.xml"));
         conf.addResource(new Path("/Users/venkat/Code/namenode_loadtester/src/main/java/com/github/venkat/hdfs/tools/hdfs-site.xml"));
@@ -24,14 +20,18 @@ public class MyListStatus {
         UserGroupInformation.loginUserFromSubject(null);
 
         FileSystem fs = FileSystem.get(conf);
-        FileStatus[] fsStatus = fs.listStatus(new Path("/"));
-/*        for(int i = 0; i < fsStatus.length; i++){
-            System.out.println(fsStatus[i].getPath().toString());
-        }*/
+        DistributedFileSystem dfs = (DistributedFileSystem) fs;
+
+        Path snapshotRoot = new Path("/user/data/");
+        String fromSnapshot = "dist1";
+        String toSnapshot = "dist2";
+
+        SnapshotDiffReport diffReport = dfs.getSnapshotDiffReport(snapshotRoot, fromSnapshot, toSnapshot);
+        System.out.println(diffReport.toString());
+
+
     }
-
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
     }
-
 }
