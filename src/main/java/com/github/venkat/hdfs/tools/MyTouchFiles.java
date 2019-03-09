@@ -1,39 +1,42 @@
 package com.github.venkat.hdfs.tools;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.security.UserGroupInformation;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-public class MyListStatus {
 
-    public MyListStatus(int percentage) {
-        float number = 10000 * ((float)percentage / 100);
+public class MyTouchFiles {
+
+    public MyTouchFiles(int percentage) {
+
+        float number = 1000000 * ((float)percentage / 100);
         final ThreadPoolExecutor executor = new ThreadPoolExecutor(3000, 30000, 10000000, TimeUnit.MILLISECONDS,
                 new LinkedBlockingQueue<Runnable>(), new ThreadPoolExecutor.CallerRunsPolicy());
-        for (int i = 0; i < number; i++) {
-            System.out.println("Calling listStatus " + i);
-            executor.execute(new listStatus());
+
+        int j = 0;
+
+        for (int i = 0; i < number;) {
+            j = i + 500;
+            System.out.println("Calling touchFiles(" + i + "," + j + ")");
+            executor.execute(new TouchFiles(i, j));
+            i = i + 500;
         }
         executor.shutdown();
     }
 
-    public static void main(String[] args) throws IOException {
+    public class TouchFiles implements Runnable {
+        private int start, end;
 
-    }
-
-    public class listStatus implements Runnable {
+        public TouchFiles(int i, int j) {
+            this.start = i;
+            this.end = j;
+        }
 
         @Override
         public void run() {
@@ -43,14 +46,25 @@ public class MyListStatus {
             UserGroupInformation.setConfiguration(conf);
             try {
                 UserGroupInformation.loginUserFromSubject(null);
-                FileSystem fs = FileSystem.get(conf);
-                FileStatus[] fsStatus = fs.listStatus(new Path("/"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
+            FileSystem fs = null;
+            try {
+                fs = FileSystem.get(conf);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            for (int i = start; i < end; i++) {
+                System.out.println("Loop :" + i);
+                try {
+                    fs.create(new Path("/user/data/test/file" + i), true).close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
-
-
 }
+
