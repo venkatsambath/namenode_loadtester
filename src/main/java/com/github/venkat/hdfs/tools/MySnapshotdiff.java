@@ -41,10 +41,11 @@ public class MySnapshotdiff {
                 UserGroupInformation.loginUserFromSubject(null);
                 FileSystem fs = FileSystem.get(conf);
                 DistributedFileSystem dfs = (DistributedFileSystem) fs;
-                Path snapshotRoot = new Path("/user/bdr/venkat/");
+                Path snapshotRoot = new Path("/user/bdr/");
                 String fromSnapshot = "s1";
                 String toSnapshot = "s2";
                 System.out.println(java.time.LocalDate.now() + " " + java.time.LocalTime.now().toString());
+                System.out.println("Calling snapshotdiff");
                 SnapshotDiffReport diffReport = dfs.getSnapshotDiffReport(snapshotRoot, fromSnapshot, toSnapshot);
                 System.out.println(java.time.LocalDate.now() + " " + java.time.LocalTime.now().toString());
                 System.out.println(diffReport.toString());

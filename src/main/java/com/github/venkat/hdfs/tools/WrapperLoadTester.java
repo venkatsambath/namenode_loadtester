@@ -1,5 +1,7 @@
 package com.github.venkat.hdfs.tools;
 
+import com.github.venkat.hdfs.singlerpc.singleListStatus;
+
 import java.util.Scanner;
 
 public class WrapperLoadTester {
@@ -24,6 +26,8 @@ public class WrapperLoadTester {
         new Thread(() -> { MySnapshotdiff mySnapshotdiff = new MySnapshotdiff(snapshotdiff);  }).start();
         new Thread(() -> { MyTouchFiles myTouchFiles = new MyTouchFiles(touchfiles);  }).start();
         new Thread(() -> { MyGetBlockLocation myGetBlockLocation = new MyGetBlockLocation(getblocklocation);   }).start();
+        new Thread(() ->  {
+            singleListStatus singleListStatusList = new singleListStatus();}).start();
 
 
     }
