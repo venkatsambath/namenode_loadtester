@@ -1,4 +1,4 @@
-option java_package = "com.github.venkat.hdfs.protobuf.example";
+option java_package = "com.github.venkat.protobuf.examples";
 option java_outer_classname = "MyBusinessProtocolProtos";
 option java_generic_services = true;
 option java_generate_equals_and_hash = true;

@@ -1,0 +1,22 @@
+option java_package = "com.github.venkat.hadoop_protobuf";
+option java_outer_classname = "HadoopRpcServiceProtos";
+option java_generic_services = true;
+option java_generate_equals_and_hash = true;
+package hadoop.common;
+
+
+message EmptyRequestProto {
+
+    required string message = 1;
+
+}
+
+message EmptyResponseProto {
+
+    required string message = 1;
+
+}
+
+service HadoopRpcServiceProto {
+    rpc ping(EmptyRequestProto) returns (EmptyResponseProto);
+}
